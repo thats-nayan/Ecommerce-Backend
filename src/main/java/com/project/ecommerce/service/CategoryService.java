@@ -8,4 +8,6 @@ public interface CategoryService {
     List<Category> getAllCategories();
     boolean createCategory(Category category);
     boolean deleteCategory(Long categoryId);
+
+    boolean updateCategory(Long categoryId, Category category);
 }

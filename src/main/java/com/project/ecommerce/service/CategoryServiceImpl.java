@@ -32,4 +32,18 @@ public class CategoryServiceImpl implements CategoryService{
         Category category = categories.stream().filter(c -> c.getCategoryId().equals(categoryId)).findFirst().orElse(null);
         return categories.remove(category);
     }
+
+    @Override
+    public boolean updateCategory(Long categoryId, Category category) {
+        Category categoryToUpdate = categories.stream().filter(c -> c.getCategoryId().equals(categoryId)).findFirst().orElse(null);
+        if(categoryToUpdate != null){
+            if(category.getCategoryName() != null){
+                categoryToUpdate.setCategoryName(category.getCategoryName());
+            }
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
 }

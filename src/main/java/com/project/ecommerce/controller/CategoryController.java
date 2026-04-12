@@ -27,7 +27,7 @@ public class CategoryController {
     public ResponseEntity<String> addCategory(@RequestBody Category category) {
         boolean status = categoryService.createCategory(category);
         if(status){
-            return new ResponseEntity<>("Category created successfully", HttpStatus.OK);
+            return new ResponseEntity<>("Category created successfully", HttpStatus.CREATED);
         }
         else{
             return new ResponseEntity<>("Category already exists", HttpStatus.BAD_REQUEST);
@@ -41,6 +41,17 @@ public class CategoryController {
             return new ResponseEntity<>("Category deleted successfully", HttpStatus.OK);
         } else {
             return new ResponseEntity<>("Category not found", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PutMapping("/api/admin/categories/{categoryId}")
+    public ResponseEntity<String> updateCategory(@PathVariable Long categoryId, @RequestBody Category category) {
+        boolean status = categoryService.updateCategory(categoryId, category);
+        if (status) {
+            return new ResponseEntity<>("Category updated successfully", HttpStatus.OK);
+        }
+        else{
+            return new ResponseEntity<>("Category cannot be updated", HttpStatus.NOT_FOUND);
         }
     }
 }
