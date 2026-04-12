@@ -17,19 +17,19 @@ public class CategoryServiceImpl implements CategoryService{
     }
 
     @Override
-    public void createCategory(Category category) {
-        category.setCategoryId(nextId++);
-        categories.add(category);
-    }
-    @Override
-    public String deleteCategory(Long categoryId) {
-        Category category = categories.stream().filter(c -> c.getCategoryId().equals(categoryId)).findFirst().orElse(null);
-        if(category != null){
-            categories.remove(category);
-            return "Category deleted successfully";
+    public boolean createCategory(Category category) {
+        Category categoryToAdd = categories.stream().filter(c -> c.getCategoryName().equalsIgnoreCase(category.getCategoryName())).findFirst().orElse(null);
+        if(categoryToAdd == null){
+            category.setCategoryId(nextId++);
+            return categories.add(category);
         }
         else{
-            return "Category not found";
+            return false;
         }
+    }
+    @Override
+    public boolean deleteCategory(Long categoryId) {
+        Category category = categories.stream().filter(c -> c.getCategoryId().equals(categoryId)).findFirst().orElse(null);
+        return categories.remove(category);
     }
 }
