@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping("/api")
 public class CategoryController {
     private CategoryService categoryService;
 
@@ -18,12 +19,12 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
 
-    @GetMapping("/api/public/categories")
+    @GetMapping("/public/categories")
     public ResponseEntity<List<Category>> getAllCategories() {
         return new ResponseEntity<>(categoryService.getAllCategories(), HttpStatus.OK);
     }
 
-    @PostMapping("/api/admin/category")
+    @PostMapping("/admin/category")
     public ResponseEntity<String> addCategory(@RequestBody Category category) {
         boolean status = categoryService.createCategory(category);
         if(status){
@@ -34,7 +35,7 @@ public class CategoryController {
         }
     }
 
-    @DeleteMapping("/api/admin/categories/{categoryId}")
+    @DeleteMapping("/admin/categories/{categoryId}")
     public ResponseEntity<String> deleteCategory(@PathVariable Long categoryId) {
         boolean status = categoryService.deleteCategory(categoryId);
         if (status) {
@@ -44,7 +45,7 @@ public class CategoryController {
         }
     }
 
-    @PutMapping("/api/admin/categories/{categoryId}")
+    @PutMapping("/admin/categories/{categoryId}")
     public ResponseEntity<String> updateCategory(@PathVariable Long categoryId, @RequestBody Category category) {
         boolean status = categoryService.updateCategory(categoryId, category);
         if (status) {
