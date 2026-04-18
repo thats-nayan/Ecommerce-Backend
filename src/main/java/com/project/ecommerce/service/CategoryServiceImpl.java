@@ -1,5 +1,7 @@
 package com.project.ecommerce.service;
 
+import com.project.ecommerce.exceptions.ResourceAlreadyExistsException;
+import com.project.ecommerce.exceptions.ResourceNotFoundException;
 import com.project.ecommerce.model.Category;
 import com.project.ecommerce.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,39 +22,36 @@ public class CategoryServiceImpl implements CategoryService{
     }
 
     @Override
-    public boolean createCategory(Category category) {
+    public void createCategory(Category category){
         Optional<Category> categoryToAdd = categoryRepository.findByCategoryNameIgnoreCase(category.getCategoryName());
-        if(categoryToAdd.isEmpty()){
-            categoryRepository.save(category);
-            return true;
+        if(categoryToAdd.isPresent()){
+            throw new ResourceAlreadyExistsException("Category","categoryName",category.getCategoryName());
         }
-        else{
-            return false;
-        }
+        categoryRepository.save(category);
     }
     @Override
-    public boolean deleteCategory(Long categoryId) {
+    public void deleteCategory(Long categoryId) {
         Optional<Category> categoryToDelete = categoryRepository.findById(categoryId);
         if(categoryToDelete.isEmpty()){
-            return false;
+            throw new ResourceNotFoundException("Category","categoryId",categoryId);
         }
         categoryRepository.delete(categoryToDelete.get());
-        return true;
     }
 
     @Override
-    public boolean updateCategory(Long categoryId, Category category) {
+    public void updateCategory(Long categoryId, Category category) {
         Optional<Category> categoryToUpdate = categoryRepository.findById(categoryId);
-        if(categoryToUpdate.isPresent()){
-            Category updatedCategory = categoryToUpdate.get();
-            if(category.getCategoryName() != null){
-                updatedCategory.setCategoryName(category.getCategoryName());
-                categoryRepository.save(updatedCategory);
-            }
-            return true;
+        if(categoryToUpdate.isEmpty()){
+            throw new ResourceNotFoundException("Category","categoryId",categoryId);
         }
-        else{
-            return false;
+        Optional<Category> existingCategory = categoryRepository.findByCategoryNameIgnoreCase(category.getCategoryName());
+        if(existingCategory.isPresent()){
+            throw new ResourceAlreadyExistsException("Category","categoryName",category.getCategoryName());
+        }
+        Category updatedCategory = categoryToUpdate.get();
+        if(category.getCategoryName() != null){
+            updatedCategory.setCategoryName(category.getCategoryName());
+            categoryRepository.save(updatedCategory);
         }
     }
 }
