@@ -5,6 +5,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 @Entity
 // @Entity(name = "categories") customization
@@ -14,7 +15,8 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long categoryId;
 
-    @NotBlank
+    @NotBlank(message = "Category name cannot be blank")
+    @Size(min = 5, max = 32, message = "Category name must be between 5 and 32 characters")
     private String categoryName;
 
     public Category(String categoryName, Long categoryId) {

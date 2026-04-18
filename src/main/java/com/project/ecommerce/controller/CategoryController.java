@@ -26,34 +26,20 @@ public class CategoryController {
     }
 
     @PostMapping("/admin/category")
-    public ResponseEntity<String> addCategory(@Valid @RequestBody Category category) {
-        boolean status = categoryService.createCategory(category);
-        if(status){
-            return new ResponseEntity<>("Category created successfully", HttpStatus.CREATED);
-        }
-        else{
-            return new ResponseEntity<>("Category already exists", HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<String> addCategory(@Valid @RequestBody Category category) throws Exception {
+        categoryService.createCategory(category);
+        return new ResponseEntity<>("Category created", HttpStatus.CREATED);
     }
 
     @DeleteMapping("/admin/categories/{categoryId}")
     public ResponseEntity<String> deleteCategory(@PathVariable Long categoryId) {
-        boolean status = categoryService.deleteCategory(categoryId);
-        if (status) {
-            return new ResponseEntity<>("Category deleted successfully", HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("Category not found", HttpStatus.NOT_FOUND);
-        }
+        categoryService.deleteCategory(categoryId);
+        return new ResponseEntity<>("Category deleted successfully", HttpStatus.OK);
     }
 
     @PutMapping("/admin/categories/{categoryId}")
     public ResponseEntity<String> updateCategory(@PathVariable Long categoryId,@Valid @RequestBody Category category) {
-        boolean status = categoryService.updateCategory(categoryId, category);
-        if (status) {
-            return new ResponseEntity<>("Category updated successfully", HttpStatus.OK);
-        }
-        else{
-            return new ResponseEntity<>("Category cannot be updated", HttpStatus.NOT_FOUND);
-        }
+        categoryService.updateCategory(categoryId,category);
+        return new ResponseEntity<>("Category updated successfully", HttpStatus.OK);
     }
 }
