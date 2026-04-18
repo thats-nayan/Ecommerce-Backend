@@ -26,7 +26,7 @@ public class CategoryController {
     }
 
     @PostMapping("/admin/category")
-    public ResponseEntity<String> addCategory(@Valid @RequestBody Category category) throws Exception {
+    public ResponseEntity<String> addCategory(@Valid @RequestBody Category category){
         categoryService.createCategory(category);
         return new ResponseEntity<>("Category created", HttpStatus.CREATED);
     }
