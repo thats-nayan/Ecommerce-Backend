@@ -6,8 +6,14 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 // @Entity(name = "categories") customization
 public class Category {
     @Id // marks field as primary key
@@ -18,25 +24,4 @@ public class Category {
     @NotBlank(message = "Category name cannot be blank")
     @Size(min = 5, max = 32, message = "Category name must be between 5 and 32 characters")
     private String categoryName;
-
-    public Category(String categoryName, Long categoryId) {
-        this.categoryName = categoryName;
-        this.categoryId = categoryId;
-    }
-
-    public Category() {
-    }
-
-    public Long getCategoryId() {
-        return categoryId;
-    }
-    public void setCategoryId(Long categoryId) {
-        this.categoryId = categoryId;
-    }
-    public String getCategoryName() {
-        return categoryName;
-    }
-    public void setCategoryName(String categoryName) {
-        this.categoryName = categoryName;
-    }
 }
