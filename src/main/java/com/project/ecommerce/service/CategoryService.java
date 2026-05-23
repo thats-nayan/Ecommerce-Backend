@@ -5,7 +5,7 @@ import com.project.ecommerce.dto.CategoryResponse;
 import com.project.ecommerce.model.Category;
 
 public interface CategoryService {
-    CategoryResponse getAllCategories();
+    CategoryResponse getAllCategories(Integer pageNumber, Integer pageSize);
     CategoryDTO createCategory(CategoryDTO category);
     CategoryDTO deleteCategory(Long categoryId);
     CategoryDTO updateCategory(Long categoryId, CategoryDTO category);
