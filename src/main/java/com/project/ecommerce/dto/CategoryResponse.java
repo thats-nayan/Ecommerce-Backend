@@ -4,12 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CategoryResponse {
+public class CategoryResponse implements Serializable {
     private List<CategoryDTO> content;
     // Add pagination metadata
     private Integer pageNumber;

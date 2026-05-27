@@ -27,6 +27,7 @@ public class CategoryServiceImpl implements CategoryService{
     @Autowired
     private ModelMapper modelMapper;
 
+    @Cacheable("allCategories")
     @Override
     public CategoryResponse getAllCategories(Integer pageNumber, Integer pageSize, String sortBy, String sortDir) {
         Sort sortByAndOrder = sortDir.equalsIgnoreCase("asc")
@@ -55,6 +56,7 @@ public class CategoryServiceImpl implements CategoryService{
         return categoryResponse;
     }
 
+    @CacheEvict(value = "allCategories", allEntries = true)
     @Override
     public CategoryDTO createCategory(CategoryDTO category){
         Optional<Category> existingCategory = categoryRepository.findByCategoryNameIgnoreCase(category.getCategoryName());
@@ -75,6 +77,7 @@ public class CategoryServiceImpl implements CategoryService{
         categoryRepository.delete(categoryToDelete.get());
         return modelMapper.map(categoryToDelete.get(), CategoryDTO.class);
     }
+
     @CacheEvict(value = "categories", key = "#categoryId")
     @Override
     public CategoryDTO updateCategory(Long categoryId, CategoryDTO category) {
