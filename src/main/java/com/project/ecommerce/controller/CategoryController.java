@@ -7,6 +7,7 @@ import com.project.ecommerce.model.Category;
 import com.project.ecommerce.service.CategoryService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api")
 public class CategoryController {
-    private CategoryService categoryService;
+    private final CategoryService categoryService;
 
     @Autowired
     public CategoryController(CategoryService categoryService) {
@@ -29,6 +30,11 @@ public class CategoryController {
             @RequestParam(name = "sortDir", defaultValue = AppConstants.SORT_DIR) String sortDir
     ) {
         return new ResponseEntity<>(categoryService.getAllCategories(pageNumber,pageSize, sortBy, sortDir), HttpStatus.OK);
+    }
+
+    @GetMapping("/public/category/{categoryId}")
+    public ResponseEntity<CategoryDTO> getCategory(@PathVariable Long categoryId) {
+        return new ResponseEntity<>(categoryService.getCategoryById(categoryId), HttpStatus.OK);
     }
 
     @PostMapping("/admin/category")

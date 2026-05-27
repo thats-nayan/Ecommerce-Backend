@@ -9,4 +9,6 @@ public interface CategoryService {
     CategoryDTO createCategory(CategoryDTO category);
     CategoryDTO deleteCategory(Long categoryId);
     CategoryDTO updateCategory(Long categoryId, CategoryDTO category);
+
+    CategoryDTO getCategoryById(Long categoryId);
 }
