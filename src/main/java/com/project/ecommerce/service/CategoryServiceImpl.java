@@ -8,6 +8,8 @@ import com.project.ecommerce.model.Category;
 import com.project.ecommerce.repository.CategoryRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -25,6 +27,7 @@ public class CategoryServiceImpl implements CategoryService{
     @Autowired
     private ModelMapper modelMapper;
 
+    @Cacheable("allCategories")
     @Override
     public CategoryResponse getAllCategories(Integer pageNumber, Integer pageSize, String sortBy, String sortDir) {
         Sort sortByAndOrder = sortDir.equalsIgnoreCase("asc")
@@ -53,6 +56,7 @@ public class CategoryServiceImpl implements CategoryService{
         return categoryResponse;
     }
 
+    @CacheEvict(value = "allCategories", allEntries = true)
     @Override
     public CategoryDTO createCategory(CategoryDTO category){
         Optional<Category> existingCategory = categoryRepository.findByCategoryNameIgnoreCase(category.getCategoryName());
@@ -63,6 +67,7 @@ public class CategoryServiceImpl implements CategoryService{
         categoryRepository.save(categoryToAdd);
         return modelMapper.map(categoryToAdd, CategoryDTO.class);
     }
+    @CacheEvict(value = "categories", key = "#categoryId")
     @Override
     public CategoryDTO deleteCategory(Long categoryId) {
         Optional<Category> categoryToDelete = categoryRepository.findById(categoryId);
@@ -73,6 +78,7 @@ public class CategoryServiceImpl implements CategoryService{
         return modelMapper.map(categoryToDelete.get(), CategoryDTO.class);
     }
 
+    @CacheEvict(value = "categories", key = "#categoryId")
     @Override
     public CategoryDTO updateCategory(Long categoryId, CategoryDTO category) {
         Optional<Category> categoryToUpdate = categoryRepository.findById(categoryId);
@@ -89,5 +95,15 @@ public class CategoryServiceImpl implements CategoryService{
         }
         categoryRepository.save(updatedCategory);
         return modelMapper.map(updatedCategory, CategoryDTO.class);
+    }
+
+    @Cacheable(value = "categories" , key = "#categoryId")
+    @Override
+    public CategoryDTO getCategoryById(Long categoryId) {
+        Optional<Category> category = categoryRepository.findById(categoryId);
+        if(category.isEmpty()){
+            throw new ResourceNotFoundException("Category","categoryId",categoryId);
+        }
+        return modelMapper.map(category.get(), CategoryDTO.class);
     }
 }
